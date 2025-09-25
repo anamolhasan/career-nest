@@ -34,8 +34,9 @@ const Navbar = () => {
           {links}
         </ul>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end space-x-5">
         <NavLink to={'/register'} className="btn">Register</NavLink>
+        <NavLink to={'/signIn'} className="btn">SignIn</NavLink>
       </div>
     </div>
   );
