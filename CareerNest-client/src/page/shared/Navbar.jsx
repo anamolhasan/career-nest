@@ -1,7 +1,8 @@
 import React, { use } from "react";
 import { FaBars } from "react-icons/fa";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import logo from '../../assets/logo/career-nest.png'
 
 const Navbar = () => {
   const { user, signOutUser } = use(AuthContext);
@@ -40,7 +41,10 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">Career Nest</a>
+        <Link to={'/'} className="flex justify-center items-center text-xl">
+        <img src={logo} alt="" className="w-20 p-0 m-0" />
+        Career Nest
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
