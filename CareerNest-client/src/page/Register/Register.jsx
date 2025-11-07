@@ -3,6 +3,7 @@ import React, { use } from 'react'
 
 import registerLottie from '../../assets/lottie/register.json'
 import { AuthContext } from '../../context/Auth/AuthContext'
+import SocialLogin from '../shared/SocialLogin'
 
 
 
@@ -45,6 +46,7 @@ const Register = () => {
           <button className="btn btn-neutral mt-4">Register</button>
         </fieldset>
         </form>
+        <SocialLogin />
       </div>
     </div>
   </div>

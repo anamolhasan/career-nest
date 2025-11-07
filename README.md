@@ -15,3 +15,4 @@
 - [daisyui](https://daisyui.com/)
 - [react-lottie]()
 - [Motion](https://motion.dev)
+- [icons8](https://icons8.com/)
