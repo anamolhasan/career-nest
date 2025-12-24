@@ -10,10 +10,10 @@ const Navbar = () => {
   const handleSignOut = () => {
     signOutUser()
      .then(()=> {
-      console.log('signOut')
+      console.log('successful signOut')
      })
      .catch(error => {
-      console.log(error)
+      console.log(error,' failed to sign out stay here. ')
      })
   };
 
@@ -23,12 +23,12 @@ const Navbar = () => {
         <NavLink to={"/"}>Home</NavLink>
       </li>
       <li>
-        <NavLink to={"/"}>Submenu 2</NavLink>
+        <NavLink to={"/my-applications"}>My Applications</NavLink>
       </li>
     </>
   );
   return (
-    <div className="navbar  shadow-sm max-w-7xl mx-auto ">
+    <div className="navbar max-w-7xl mx-auto ">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

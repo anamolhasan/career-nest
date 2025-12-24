@@ -5,8 +5,8 @@ import team2 from '../../assets/banner/work-team.jpg'
 
 const Banner = () => {
   return (
-    <div className="hero  min-h-screen">
-  <div className="hero-content flex-col lg:flex-row-reverse">
+    <div className=" ">
+  <div className="hero-content mb-20 flex-col lg:flex-row-reverse">
      <div className='flex-1'>
         <motion.img
         animate={{y:[100,150,100]}}
