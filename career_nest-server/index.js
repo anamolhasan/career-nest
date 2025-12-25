@@ -29,7 +29,7 @@ async function run() {
     await client.connect();
 
     const jobsCollection = client.db('career_nest').collection('jobs')
-    const jobApplicationCollection = client.db('jobPortal').collection('job_applications')
+    const applicationsCollection = client.db('career_nest').collection('applications')
 
     // jobs api
     app.get('/jobs', async(req, res) => {
@@ -38,7 +38,7 @@ async function run() {
         res.send(result)
     })
 
-    app.get('jobs/:id', async (req, res) => {
+    app.get('/jobs/:id', async (req, res) => {
         const id = req.params.id
         const query = {_id: new ObjectId(id)}
         const result = await jobsCollection.findOne(query)
@@ -48,9 +48,66 @@ async function run() {
 
     // job application apis
     // get all data, get one data, get some data [0,1,mony]
-    app.get('/job-application', async (req, res) => {
+    app.get('/applications', async (req, res) => {
         const email = req.query.email
-       
+       const query = {
+        applicant:email
+       }
+       const result = await applicationsCollection.find(query).toArray()
+
+      //  bad way to aggregate data
+      for(const application of result){
+        const jobId = application.jobId
+        const jobQuery = {_id: new ObjectId(jobId)}
+        const job = await jobsCollection.findOne(jobQuery)
+        application.company = job.company
+        application.title = job.title
+        application.company_logo = job.company_logo
+      }
+       res.send(result)
+    })
+
+//     app.get('/applications', async (req, res) => {
+//   const email = req.query.email;
+
+//   const result = await applicationsCollection.aggregate([
+//     {
+//       $match: { applicant: email }
+//     },
+//     {
+//       $addFields: {
+//         jobObjectId: { $toObjectId: "$jobId" }
+//       }
+//     },
+//     {
+//       $lookup: {
+//         from: "jobs",
+//         localField: "jobObjectId",
+//         foreignField: "_id",
+//         as: "job"
+//       }
+//     },
+//     {
+//       $unwind: "$job"
+//     },
+//     {
+//       $project: {
+//         applicant: 1,
+//         jobId: 1,
+//         "job.title": 1,
+//         "job.company": 1,
+//         "job.company_logo": 1
+//       }
+//     }
+//   ]).toArray();
+
+//   res.send(result);
+// });
+
+    app.post('/applications', async (req, res) =>{
+      const application = req.body;
+      const result = await applicationsCollection.insertOne(application)
+      res.send(result)
     })
 
 

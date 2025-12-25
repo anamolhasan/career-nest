@@ -43,7 +43,7 @@ const HotJobCard = ({ job }) => {
         <div className="card-actions justify-end items-center mt-4">
             <p className="flex items-center">Salary:<FaDollarSign />{salaryRange.min} - {salaryRange.max}</p>
             <Link to={`/jobs/${_id}`}>
-              <button className="btn btn-primary">Apply</button>
+              <button className="btn btn-primary">Details</button>
             </Link>
         </div>
       </div>
