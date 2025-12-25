@@ -1,12 +1,19 @@
 const express = require('express')
 const cors = require('cors')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const cookieParser = require('cookie-parser')
 require('dotenv').config()
+const jwt = require('jsonwebtoken')
+
+
 const app = express()
-const port = 3000
+const port =  process.env.PORT || 3000
 
 // middleware
-app.use(cors())
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials:true
+}))
 app.use(express.json())
 
 
@@ -30,6 +37,14 @@ async function run() {
 
     const jobsCollection = client.db('career_nest').collection('jobs')
     const applicationsCollection = client.db('career_nest').collection('applications')
+
+    // jwt token related api
+    app.post('/jwt', async (req, res) => {
+      const {email} = req.body
+      const user = {email}
+      const token  = jwt.sign(user, process.env.JWT_ACCESS_SECRET, {expiresIn:'1h'})
+      res.send({token})
+    })
 
     // jobs api
     app.get('/jobs', async(req, res) => {
