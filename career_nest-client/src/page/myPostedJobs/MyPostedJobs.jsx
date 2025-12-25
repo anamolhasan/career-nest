@@ -6,6 +6,7 @@ import Loading from '../shared/Loading'
 
 const MyPostedJobs = () => {
     const {user} = useAuth()
+    
   return (
     <div>
         {/* <h2>My Posted Jobs:</h2> */}

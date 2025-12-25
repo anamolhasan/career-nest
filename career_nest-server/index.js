@@ -6,6 +6,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 
+
 const app = express()
 const port =  process.env.PORT || 3000
 
@@ -15,6 +16,48 @@ app.use(cors({
   credentials:true
 }))
 app.use(express.json())
+app.use(cookieParser())
+
+
+const admin = require("firebase-admin");
+const serviceAccount = require("./firebase-admin-key.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const verifyFirebaseToken = async (req, res, next) => {
+  const authHeader = req.headers?.authorization;
+  const token = authHeader.split(' ')[1]
+  if(!token){
+    return res.status(401).send({message:'unauthorized access'})
+  }
+  const userInfo = await admin.auth().verifyIdToken(token)
+  req.tokenEmail = userInfo.email
+  next()
+}
+
+
+const verifyToken = (req, res, next) => {
+  const token = req?.cookies?.token
+
+    if(!token){
+      return res.status(401).send({
+        message:'unauthorized access'
+      })
+    }
+
+    // verify token
+    jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
+      if(err){
+        return res.status(401).send({
+          message:'unauthorized access'
+        })
+      }
+      req.decoded = decoded
+      next()
+    })
+}
+
 
 
 
@@ -40,10 +83,16 @@ async function run() {
 
     // jwt token related api
     app.post('/jwt', async (req, res) => {
-      const {email} = req.body
-      const user = {email}
-      const token  = jwt.sign(user, process.env.JWT_ACCESS_SECRET, {expiresIn:'1h'})
-      res.send({token})
+      const userData = req.body
+      // console.log(userData)
+      const token  = jwt.sign(userData, process.env.JWT_ACCESS_SECRET, {expiresIn:'7d'})
+
+      // set token in the cookies
+      res.cookie('token', token, {
+        httpOnly:true,
+        secure:false
+      })
+      res.send({success:true})
     })
 
     // jobs api
@@ -63,6 +112,7 @@ async function run() {
       const query = {hr_email:email}
       const jobs = await jobsCollection.find(query).toArray()
 
+      // console.log(req.cookies(token))
       // should use aggregate to have optimum data fetching
       for(const job of jobs){
         const applicationQuery = {jobId: job._id.toString()}
@@ -88,8 +138,20 @@ async function run() {
 
     // job application apis
     // get all data, get one data, get some data [0,1,mony]
-    app.get('/applications', async (req, res) => {
+    app.get('/applications',verifyFirebaseToken, async (req, res) => {
         const email = req.query.email
+
+        // console.log('inside applications api', req.cookies)
+        // if(email !== req.decoded.email){
+        //   return res.status(403).send({
+        //     message:'forbidden access'
+        //   })
+        // }
+
+        if(req.tokenEmail !== email){
+          return res.status(403).send({message:'forbidden access'})
+        }
+      
        const query = {
         applicant:email
        }

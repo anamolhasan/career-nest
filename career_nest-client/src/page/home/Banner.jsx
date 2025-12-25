@@ -26,7 +26,10 @@ const Banner = () => {
       initial={{scale:0}}
       animate={{scale:1, transition:{duration:5, repeat:Infinity}}}
       className="text-5xl font-bold">Latest <motion.span 
-      animate={{color:''}}
+      animate={{
+         color: ['#ff5733', '#33ff33', '#8a33ff'],
+         transition: { duration: 2, repeat:Infinity }
+        }}
       >Job</motion.span> for you!</motion.h1>
       <p className="py-6">
         Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
