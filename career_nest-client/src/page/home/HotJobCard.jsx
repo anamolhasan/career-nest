@@ -33,7 +33,7 @@ const HotJobCard = ({ job }) => {
          {title}
           <div className="badge badge-secondary">NEW</div>
         </h2>
-        <p>{description}</p>
+        <p>{description.split(' ').slice(0,20).join(' ')}</p>
         <div className="flex gap-2 flex-wrap">        
           {
             requirements.map((skill, index)=> <p key={index} className="border rounded-md text-center px-2 hover:text-purple-600 hover:bg-gray-400">

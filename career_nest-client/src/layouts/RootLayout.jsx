@@ -16,7 +16,7 @@ const RootLayout = () => {
   },[])
   return (
     <div className="">
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/40 backdrop-blur-3xl' : 'bg-black'}`}>
+      <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? ' backdrop-blur-3xl' : 'bg-black'}`}>
         <Navbar />
       </nav>
       <main  className="max-w-7xl mx-auto">
