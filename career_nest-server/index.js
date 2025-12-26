@@ -12,7 +12,7 @@ const port =  process.env.PORT || 3000
 
 // middleware
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: ['http://localhost:5173', 'https://career-nest-e32b7.web.app'],
   credentials:true
 }))
 app.use(express.json())
@@ -38,26 +38,26 @@ const serviceAccount = require("./firebase-admin-key.json");
 // }
 
 
-const verifyToken = (req, res, next) => {
-  const token = req?.cookies?.token
+// const verifyToken = (req, res, next) => {
+//   const token = req?.cookies?.token
 
-    if(!token){
-      return res.status(401).send({
-        message:'unauthorized access'
-      })
-    }
+//     if(!token){
+//       return res.status(401).send({
+//         message:'unauthorized access'
+//       })
+//     }
 
-    // verify token
-    jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
-      if(err){
-        return res.status(401).send({
-          message:'unauthorized access'
-        })
-      }
-      req.decoded = decoded
-      next()
-    })
-}
+//     // verify token
+//     jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
+//       if(err){
+//         return res.status(401).send({
+//           message:'unauthorized access'
+//         })
+//       }
+//       req.decoded = decoded
+//       next()
+//     })
+// }
 
 
 
@@ -275,8 +275,8 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

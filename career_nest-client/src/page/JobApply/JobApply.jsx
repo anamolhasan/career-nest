@@ -27,7 +27,7 @@ const JobApply = () => {
         resume
       }
 
-      axios.post('http://localhost:3000/applications', application)
+      axios.post('https://career-nest-server-psi.vercel.app/applications', application)
       .then(res => {
         console.log(res.data)
         if (res.data.insertedId) {

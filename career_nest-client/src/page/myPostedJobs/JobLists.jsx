@@ -1,8 +1,8 @@
 import React, { use } from 'react'
 import { Link } from 'react-router'
 
-const JobLists = ({jobsByCreatedByPromise}) => {
-    const jobs = use(jobsByCreatedByPromise)
+const JobLists = ({jobsCreatedByPromise}) => {
+    const jobs = use(jobsCreatedByPromise)
     console.log(jobs)
   return (
     <div className="max-w-6xl mx-auto p-6">

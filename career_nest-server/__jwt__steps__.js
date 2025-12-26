@@ -18,7 +18,7 @@
     set the token to the cookies
     4. while calling the api tell to use withCredentials
 
-     axios.post('http://localhost:3000/jwt', userData, {
+     axios.post('https://career-nest-server-psi.vercel.app/jwt', userData, {
                     withCredentials: true
                 })
 

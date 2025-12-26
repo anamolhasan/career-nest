@@ -36,16 +36,16 @@ const AuthProvider = ({children}) => {
       const unSubscribe = onAuthStateChanged(auth, currentUser => {
         setUser(currentUser)
         setLoading(false)
-        if(currentUser?.email){
-          const userData = {email: currentUser.email};
-          axios.post('http://localhost:3000/jwt', userData, {
-            withCredentials:true
-          })
-            .then(res => {
-              console.log('token after jwt',res.data)
-            })
-            .catch(err => console.log(err))
-        }
+        // if(currentUser?.email){
+        //   const userData = {email: currentUser.email};
+        //   axios.post('https://career-nest-server-psi.vercel.app/jwt', userData, {
+        //     withCredentials:true
+        //   })
+        //     .then(res => {
+        //       console.log('token after jwt',res.data)
+        //     })
+        //     .catch(err => console.log(err))
+        // }
         console.log('user in the auth state change', currentUser)
       })
       return () => {
