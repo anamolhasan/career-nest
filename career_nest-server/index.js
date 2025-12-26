@@ -21,20 +21,21 @@ app.use(cookieParser())
 
 const admin = require("firebase-admin");
 const serviceAccount = require("./firebase-admin-key.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 
-const verifyFirebaseToken = async (req, res, next) => {
-  const authHeader = req.headers?.authorization;
-  const token = authHeader.split(' ')[1]
-  if(!token){
-    return res.status(401).send({message:'unauthorized access'})
-  }
-  const userInfo = await admin.auth().verifyIdToken(token)
-  req.tokenEmail = userInfo.email
-  next()
-}
+
+// const verifyFirebaseToken = async (req, res, next) => {
+//   const authHeader = req.headers?.authorization;
+//   if(!authHeader || !authHeader.startWith('Bearer ')){
+//     return res.status(401).send({message:'unauthorized access'})
+//   }
+//   const token = authHeader.split(' ')[1]
+//   if(!token){
+//     return res.status(401).send({message:'unauthorized access'})
+//   }
+//   const userInfo = await admin.auth().verifyIdToken(token)
+//   req.tokenEmail = userInfo.email
+//   next()
+// }
 
 
 const verifyToken = (req, res, next) => {
@@ -72,6 +73,35 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+// firebase access token start
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const verifyFirebaseToken = async(req, res, next) => {
+   const authHeader = req.headers?.authorization;
+
+   if(!authHeader || !authHeader.startsWith('Bearer ')){
+    return res.status(401).send({message:'unauthorized access'})
+   }
+
+   const token = authHeader.split(' ')[1]
+
+   try {
+    const decoded = await admin.auth().verifyIdToken(token)
+    req.decoded = decoded
+    next()
+   } catch (error) {
+     return res.status(401).send({message:'unauthorized access'})
+   }
+}
+
+const verifyTokenEmail = (req, res, next) => {
+  if(req.query.email !== req.decoded.email){
+    return res.status(403).send({message:'forbidden access'})
+  }
+  next()
+}
 
 async function run() {
   try {
@@ -107,8 +137,12 @@ async function run() {
         res.send(result)
     })
 
-    app.get('/jobs/applications', async(req, res) => {
-      const email = req.query.email
+    app.get('/jobs/applications',verifyFirebaseToken,verifyTokenEmail, async(req, res) => {
+      const email = req.query.email;
+
+      // if(email !== req.decoded.email){
+      //   return res.status(403).send({message:'forbidden access'})
+      // }
       const query = {hr_email:email}
       const jobs = await jobsCollection.find(query).toArray()
 
@@ -138,7 +172,7 @@ async function run() {
 
     // job application apis
     // get all data, get one data, get some data [0,1,mony]
-    app.get('/applications',verifyFirebaseToken, async (req, res) => {
+    app.get('/applications',verifyFirebaseToken,verifyTokenEmail, async (req, res) => {
         const email = req.query.email
 
         // console.log('inside applications api', req.cookies)
@@ -148,9 +182,13 @@ async function run() {
         //   })
         // }
 
-        if(req.tokenEmail !== email){
-          return res.status(403).send({message:'forbidden access'})
-        }
+        // if(req.tokenEmail !== email){
+        //   return res.status(403).send({message:'forbidden access'})
+        // }
+        
+      // if(email !== req.decoded.email){
+      //   return res.status(403).send({message:'forbidden access'})
+      // }
       
        const query = {
         applicant:email

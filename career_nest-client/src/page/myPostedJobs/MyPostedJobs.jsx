@@ -6,13 +6,13 @@ import Loading from '../shared/Loading'
 
 const MyPostedJobs = () => {
     const {user} = useAuth()
-    
+    // console.log(user)
   return (
     <div>
         {/* <h2>My Posted Jobs:</h2> */}
         <Suspense fallback={<Loading />}>
              <JobLists 
-             jobsByCreatedByPromise={jobsByCreatedByPromise(user.email)}
+             jobsByCreatedByPromise={jobsByCreatedByPromise(user?.email, user?.accessToken)}
              />
         </Suspense>
     </div>

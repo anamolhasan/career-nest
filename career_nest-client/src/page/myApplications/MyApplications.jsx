@@ -9,7 +9,7 @@ import { myApplicationsPromise } from "../../api/applicationsApi";
 const MyApplications = () => {
   const { user } = useAuth();
 
-  console.log('token firebase token', user.accessToken)
+  // console.log('token firebase token', user.accessToken)
   return (
     <div>
       <MyApplicationsStats />
